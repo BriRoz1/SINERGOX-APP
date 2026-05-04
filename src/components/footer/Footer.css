@@ -1,0 +1,132 @@
+.banner-bottom {
+  background-color: #410099;
+  height: 230px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.banner-bottom__image {
+  /* background-image: url('src/assets/banner-sinergox_2.jpg'); */
+  background-position: right;
+  background-size: cover;
+  width: calc(100% - 400px);
+}
+
+.banner-bottom__text {
+  width: 400px;
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  text-align: justify;
+  padding-right: 40px;
+  font-size: 15px;
+}
+
+.banner-bottom__text img {
+  width: 250px;
+  margin-top: 3px;
+  margin-bottom: 1px;
+}
+
+.banner-bottom__text p {
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: justify;
+  width: 100%;
+  margin: 0;
+}
+
+.banner-bottom__text strong {
+  font-weight: 700;
+}
+
+/* =========================
+   ENVOLTURA-3
+========================= */
+
+.footer-envoltura {
+  background: #440099;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+/* =========================
+   BARRA NARANJA — centrada, no ocupa todo el ancho
+========================= */
+
+.footer-barra {
+  width: 100%;
+  background: #F7F7F7;
+  display: flex;
+  justify-content: center;
+  
+}
+
+.footer-barra__inner {
+  /* background-image: url('src/assets/barra-naranja.jpg'); */
+  background-size: cover;
+  background-position: center;
+  height: 10px;
+  width: 33%;
+
+  
+}
+
+/* =========================
+   FOOTER — datos de contacto
+========================= */
+
+.footer-bottom {
+  padding: 20px;
+}
+
+.footer-bottom__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.footer-bottom__txt {
+  color: #ffffff;
+  font-size: 14px;
+  
+}
+
+.footer-bottom__terminos a {
+  margin-top: 0px;
+  color: #FF6A13;;
+  font-size: 14px;
+ 
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-bottom__terminos a:hover {
+  color: #ffaa44;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+  .banner-bottom__image {
+    display: none;
+  }
+
+  .banner-bottom__text {
+    width: 100%;
+    padding-left: 40px;
+  }
+
+  .footer-barra__inner {
+    width: 80%;
+  }
+}

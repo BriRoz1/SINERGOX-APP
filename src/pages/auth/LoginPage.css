@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900;1000&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* =========================
+   LAYOUT SPLIT
+========================= */
+
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: #EEF1F3; /* fondo gris del exterior */
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Card contenedora — igual a la imagen */
+.login-card {
+  display: flex;
+  width: 90%;
+  max-width: 1100px;
+  min-height: 700px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+  background: #ffffff;
+}
+
+/* =========================
+   PANEL IZQUIERDO
+========================= */
+
+.login-panel {
+  width: 45%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+.login-panel__inner {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.login-logo {
+  margin-bottom: 0.5rem;
+}
+
+.login-logo img {
+  top: 1371px;
+  left: 483px;
+  width: 128px;
+  opacity: 1;
+  height: 64px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* =========================
+   TAGLINE
+========================= */
+
+.login-tagline {
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 600;
+  font-family: 'Nunito', sans-serif;
+  line-height: 1.4;
+  margin-bottom: 2rem;
+}
+
+/* =========================
+   TÍTULO Y SUBTÍTULO
+========================= */
+
+.login-title {
+  font-size: 20px;
+  color: #ff6a13;
+  font-family: 'Nunito', sans-serif;
+  margin-bottom: 0.6rem;
+  text-align: left;
+  letter-spacing: 0px;
+  opacity: 1;
+}
+
+.login-subtitle {
+  font-size: 16px;
+  color: #373737;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.5;
+  margin-bottom: 2.5rem;
+  max-width: 300px;
+  text-align: center;
+  opacity: 1;
+  letter-spacing: 0px
+  
+}
+
+/* =========================
+   BOTÓN MICROSOFT
+========================= */
+
+.login-microsoft-btn {
+  width: 100%;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+
+  background: #ffffff;
+  border: 2px solid #460099;
+  border-radius: 27px;
+
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  color: #460099;
+  cursor: pointer;
+
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-microsoft-btn:hover {
+  background: #460099;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(74, 0, 152, 0.25);
+}
+
+.login-microsoft-btn:active {
+  transform: scale(0.98);
+}
+
+.login-microsoft-btn__icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* =========================
+   FOOTER DEL PANEL
+========================= */
+
+.login-footer {
+  margin-top: 1.75rem;
+  font-size: 13px;
+  font-family: 'Open Sans', sans-serif;
+  color: #999;
+}
+
+.login-footer a {
+  color: #4a0098;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.login-footer a:hover {
+  color: #ff7a00;
+}
+
+/* =========================
+   PANEL DERECHO — IMAGEN
+========================= */
+
+.login-image {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* =========================
+   RESPONSIVE — MÓVIL
+========================= */
+
+@media (max-width: 600px) {
+  .login-page {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .login-card {
+    flex-direction: column;
+    border-radius: 0;
+    box-shadow: none;
+    max-width: 100%;
+    min-height: 100vh;
+  }
+
+  .login-panel {
+    width: 100%;
+    padding: 2.5rem 1.5rem;
+  }
+
+  .login-image {
+    min-height: 200px;
+    flex: none;
+    order: -1;
+  }
+}
