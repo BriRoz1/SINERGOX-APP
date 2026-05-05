@@ -1,8 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import {
   exchangeCodeForToken,
-  sendTokenToBackend,
-  cleanDisplayName,
+  parseIdToken,
   type TokenResponse,
   type UserProfile,
 } from '../../services/auth/auth.service';
@@ -16,14 +15,12 @@ type AuthState = {
   isAuthenticated: boolean;
   token?:          TokenResponse;
   user?:           UserProfile;
-  permissions?:    string[];
 };
 
 type AuthContextType = {
-  auth:        AuthState;
-  login:       (code: string) => Promise<void>;
-  logout:      () => void;
-  hasPermission: (permission: string) => boolean;
+  auth:   AuthState;
+  login:  (code: string) => Promise<void>;
+  logout: () => void;
 };
 
 const AuthContext      = createContext<AuthContextType | undefined>(undefined);
@@ -47,9 +44,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(auth));
   }, [auth]);
 
-  // Handler de errores 401
+  // Registrar handler de errores 401 para httpClient
   const handleAuthError = useCallback((message: string) => {
     setAuthError(message);
+    // Limpiar sesión al recibir 401
     setAuth({ isAuthenticated: false });
     localStorage.removeItem(AUTH_STORAGE_KEY);
   }, []);
@@ -60,28 +58,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [handleAuthError]);
 
   const login = async (code: string) => {
-    // 1. Intercambiar code por token con Microsoft
     const token = await exchangeCodeForToken(code);
+    const user  = parseIdToken(token.id_token);
 
-    // 2. Enviar access_token al backend — obtiene usuario y permisos
-    //    Si el usuario no tiene roles (403), retorna permisos vacíos
-    //    usando el id_token para extraer nombre y email
-    const { user, permissions } = await sendTokenToBackend(
-      token.access_token,
-      token.id_token,
-    );
-
-    // 3. Limpiar sessionStorage del flujo OAuth
     sessionStorage.removeItem('oauth_state');
     sessionStorage.removeItem('oauth_code_verifier');
 
-    // 4. Limpiar prefijo XM_E del nombre
-    const cleanUser: UserProfile = {
-      name:  cleanDisplayName(user.name),
-      email: user.email,
-    };
+    console.group('✅ Usuario autenticado');
+    console.log('Nombre:', user.name);
+    console.log('Email:',  user.email);
+    console.log('OID:',    user.oid);
+    const claims = JSON.parse(atob(token.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    console.log('Claims completos:', claims);
+    console.groupEnd();
 
-    setAuth({ isAuthenticated: true, token, user: cleanUser, permissions });
+    setAuth({ isAuthenticated: true, token, user });
   };
 
   const logout = () => {
@@ -89,13 +80,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
-  // Utilidad para verificar permisos en cualquier componente
-  const hasPermission = (permission: string): boolean =>
-    auth.permissions?.includes(permission) ?? false;
-
   return (
-    <AuthContext.Provider value={{ auth, login, logout, hasPermission }}>
+    <AuthContext.Provider value={{ auth, login, logout }}>
       {children}
+
+      {/* Toast de error 401 — se muestra sobre cualquier contenido */}
       {authError && (
         <AuthErrorToast
           message={authError}
