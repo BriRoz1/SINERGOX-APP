@@ -149,6 +149,15 @@
   min-height: 800px;
 }
 
+/* Quitar borde negro que genera el SDK de Power BI */
+.home-pbi__sdk-frame iframe,
+.home-pbi__sdk-frame > div,
+.home-pbi__sdk-frame > div > iframe {
+  border: none !important;
+  outline: none !important;
+}
+
+
 /* =========================
    PANEL NOVEDADES
 ========================= */
