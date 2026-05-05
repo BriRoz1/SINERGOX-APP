@@ -219,12 +219,13 @@ const HomePage = () => {
         {/* Banner — solo imagen, el contenido va dentro de la imagen */}
         <div className="home-banner">
           <div className="home-banner__image">
-            {/* Pon tu imagen en public/assets/banner-sinergox.png */}
+         <a id="banner-link" href="https://sinergox.xm.com.co/Histricos/InventarioMetricas_Inconsistencia.xlsx?d=wda27867e5b484dbd9005073f312749ac" target="_blank">
             <img
-              src={sinergoxbanner}
-              alt="Sinergox"
-              className="home-banner__img"
-            />
+                    src={sinergoxbanner}
+                    alt="Sinergox"
+                    className="home-banner__img"
+                  />
+          </a>
           </div>
         </div>
 
