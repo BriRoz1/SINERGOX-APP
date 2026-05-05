@@ -7,13 +7,14 @@ const AuthCallbackPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
+  const [step, setStep] = useState<'validando' | 'autenticando' | 'cargando'>('validando');
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const code         = params.get('code');
+    const params        = new URLSearchParams(location.search);
+    const code          = params.get('code');
     const returnedState = params.get('state');
-    const errorParam   = params.get('error');
-    const errorDesc    = params.get('error_description');
+    const errorParam    = params.get('error');
+    const errorDesc     = params.get('error_description');
 
     // 1. Error devuelto por Microsoft
     if (errorParam) {
@@ -35,9 +36,13 @@ const AuthCallbackPage = () => {
       return;
     }
 
-    // 4. Intercambiar code por token y redirigir
+    // 4. Intercambiar code → token Microsoft → backend → redirigir
+    setStep('autenticando');
     login(code)
-      .then(() => navigate('/', { replace: true }))
+      .then(() => {
+        setStep('cargando');
+        navigate('/', { replace: true });
+      })
       .catch((err: Error) => {
         console.error('Login error:', err);
         setError(err.message ?? 'Error procesando la sesión. Intenta nuevamente.');
@@ -48,14 +53,20 @@ const AuthCallbackPage = () => {
     return (
       <div style={{ padding: '2rem' }}>
         <p style={{ color: '#c0392b', marginBottom: '1rem' }}>{error}</p>
-        <button onClick={() => navigate('/')}>Volver al inicio</button>
+        <button onClick={() => navigate('/login')}>Volver al inicio de sesión</button>
       </div>
     );
   }
 
+  const mensajes = {
+    validando:    'Validando sesión…',
+    autenticando: 'Autenticando con el sistema…',
+    cargando:     'Cargando tu perfil…',
+  };
+
   return (
     <div style={{ padding: '2rem', color: '#555' }}>
-      Iniciando sesión con Microsoft…
+      {mensajes[step]}
     </div>
   );
 };

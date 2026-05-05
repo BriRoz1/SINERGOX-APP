@@ -1,18 +1,22 @@
 import { authConfig } from '../../core/config/auth.config';
 
 export type TokenResponse = {
-  access_token: string;
-  id_token:     string;
+  access_token:   string;
+  id_token:       string;
   refresh_token?: string;
-  expires_in:   number;
-  token_type:   string;
-  scope:        string;
+  expires_in:     number;
+  token_type:     string;
+  scope:          string;
 };
 
 export type UserProfile = {
   name:  string;
   email: string;
-  oid:   string;  // ID único del usuario en Azure AD
+};
+
+export type BackendResponse = {
+  user:        UserProfile;
+  permissions: string[];
 };
 
 // ─── PKCE ────────────────────────────────────────────────────
@@ -31,30 +35,10 @@ export async function generateCodeChallenge(verifier: string): Promise<string> {
     .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-// ─── Decodificar id_token (JWT) ───────────────────────────────
-// El id_token es un JWT firmado por Microsoft. No necesitamos
-// verificar la firma aquí (el backend lo hace). Solo leemos el
-// payload para mostrar datos del usuario en la UI.
+// ─── Limpiar prefijo XM_E del nombre ─────────────────────────
 
-export function parseIdToken(idToken: string): UserProfile {
-  try {
-    const payload = idToken.split('.')[1];
-    const json    = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-    const claims  = JSON.parse(json);
-
-    // El nombre viene como "XM_E ANDRES FELIPE ROZO BRIJALDO"
-    // Limpiamos el prefijo tipo "XM_E " o "XM_" al inicio
-    const rawName = claims.name ?? claims.preferred_username ?? 'Usuario';
-    const cleanName = rawName.replace(/^[A-Z]+_[A-Z]?\s*/i, '').trim() || rawName;
-
-    return {
-      name:  cleanName,
-      email: claims.email ?? claims.upn ?? claims.preferred_username ?? '',
-      oid:   claims.oid   ?? '',
-    };
-  } catch {
-    throw new Error('No se pudo leer el id_token de Microsoft');
-  }
+export function cleanDisplayName(rawName: string): string {
+  return rawName.replace(/^[A-Z]+_[A-Z]?\s*/i, '').trim() || rawName;
 }
 
 // ─── Intercambiar code por token ─────────────────────────────
@@ -86,13 +70,65 @@ export async function exchangeCodeForToken(code: string): Promise<TokenResponse>
   return res.json();
 }
 
-// ─── TODO: enviar access_token al backend .NET ───────────────
-// export async function sendTokenToBackend(accessToken: string) {
-//   const res = await fetch('/api/auth/login', {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ accessToken }),
-//   });
-//   if (!res.ok) throw new Error('Error al autenticar con el backend');
-//   return res.json(); // { name, email, roles, ... }
-// }
+// ─── Redirigir a Microsoft ────────────────────────────────────
+
+export async function redirectToMicrosoft(): Promise<void> {
+  const state         = crypto.randomUUID();
+  const codeVerifier  = generateCodeVerifier();
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+  sessionStorage.setItem('oauth_state',         state);
+  sessionStorage.setItem('oauth_code_verifier', codeVerifier);
+
+  const params = new URLSearchParams({
+    client_id:             authConfig.clientId,
+    response_type:         'code',
+    redirect_uri:          authConfig.redirectUri,
+    scope:                 authConfig.scopes,
+    state,
+    response_mode:         'query',
+    code_challenge:        codeChallenge,
+    code_challenge_method: 'S256',
+  });
+
+  window.location.href = `${authConfig.ssoUrl}?${params.toString()}`;
+}
+
+// ─── Enviar access_token al backend .NET ─────────────────────
+
+export async function sendTokenToBackend(accessToken: string, idToken?: string): Promise<BackendResponse> {
+  const res = await fetch(
+    'https://gr-sinergox-dev-01-ajcyauauhmd3etb2.eastus2-01.azurewebsites.net/api/Secure/permissions',
+    {
+      method:  'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type':  'application/json',
+      },
+    }
+  );
+
+  // 403 — usuario sin roles asignados, dejar pasar sin permisos
+  if (res.status === 403) {
+    console.warn('Usuario sin roles asignados — acceso limitado.');
+    // Extraer nombre y email del id_token si está disponible
+    let name  = 'Usuario';
+    let email = '';
+    if (idToken) {
+      try {
+        const payload = JSON.parse(atob(idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        name  = payload.name ?? payload.preferred_username ?? 'Usuario';
+        email = payload.email ?? payload.upn ?? payload.preferred_username ?? '';
+      } catch { /* usar defaults */ }
+    }
+    return { user: { name, email }, permissions: [] };
+  }
+
+  if (!res.ok) {
+    const body = await res.text();
+    console.error('Backend error:', res.status, res.statusText, body);
+    throw new Error(`Error al autenticar con el backend (${res.status}): ${body}`);
+  }
+
+  return res.json() as Promise<BackendResponse>;
+}
