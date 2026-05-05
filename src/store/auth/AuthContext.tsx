@@ -74,8 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (emailDomain !== 'xm.com.co') {
       sessionStorage.removeItem('oauth_state');
       sessionStorage.removeItem('oauth_code_verifier');
-      window.location.href = '/acceso-denegado';
-      return;
+      throw new Error('ACCESO_DENEGADO');
     }
 
     // 4. Limpiar sessionStorage del flujo OAuth

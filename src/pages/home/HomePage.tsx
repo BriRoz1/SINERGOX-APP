@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as pbi from 'powerbi-client';
 import { useAuth } from '../../store/auth/AuthContext';
 import './HomePage.css';
@@ -118,7 +119,7 @@ const PowerBIEmbed = () => {
         // El token del backend se renueva recargando la página cuando expire.
 
       } catch (err) {
-        // console.error('Error embebiendo Power BI:', err);
+        console.error('Error embebiendo Power BI:', err);
         setLoading(false);
       }
     };
@@ -151,6 +152,7 @@ const PowerBIEmbed = () => {
 
 const HomePage = () => {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [novedadesOpen, setNovedadesOpen]   = useState(true);
   const [procesandoAuth, setProcesandoAuth] = useState(false);
 
@@ -179,8 +181,12 @@ const HomePage = () => {
       login(code)
         .then(() => window.history.replaceState({}, '', '/'))
         .catch((err: Error) => {
-          console.error('Login error:', err);
-          window.history.replaceState({}, '', '/');
+          if (err.message === 'ACCESO_DENEGADO') {
+            navigate('/acceso-denegado', { replace: true });
+          } else {
+            console.error('Login error:', err);
+            window.history.replaceState({}, '', '/');
+          }
         })
         .finally(() => setProcesandoAuth(false));
     }
