@@ -63,24 +63,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // 1. Intercambiar code por token con Microsoft
     const token = await exchangeCodeForToken(code);
 
-    console.group('✅ Token obtenido de Microsoft');
-    console.log('scope:', token.scope);
-    console.log('expira en:', `${token.expires_in}s`);
-    console.log('access_token', token.access_token);
-    console.groupEnd();
     // 2. Enviar access_token al backend — obtiene usuario y permisos
-    //    Si el usuario no tiene roles (403), retorna permisos vacíos
-    //    usando el id_token para extraer nombre y email
     const { user, permissions } = await sendTokenToBackend(
       token.access_token,
       token.id_token,
     );
 
-    // 3. Limpiar sessionStorage del flujo OAuth
+    // 3. Validar dominio — solo se permite @xm.com.co
+    const emailDomain = user.email.split('@')[1]?.toLowerCase();
+    if (emailDomain !== 'xm.com.co') {
+      sessionStorage.removeItem('oauth_state');
+      sessionStorage.removeItem('oauth_code_verifier');
+      window.location.href = '/acceso-denegado';
+      return;
+    }
+
+    // 4. Limpiar sessionStorage del flujo OAuth
     sessionStorage.removeItem('oauth_state');
     sessionStorage.removeItem('oauth_code_verifier');
 
-    // 4. Limpiar prefijo XM_E del nombre
+    // 5. Limpiar prefijo XM_E del nombre
     const cleanUser: UserProfile = {
       name:  cleanDisplayName(user.name),
       email: user.email,

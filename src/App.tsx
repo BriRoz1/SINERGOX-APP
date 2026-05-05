@@ -4,6 +4,7 @@ import MainMenu from './components/mainmenu/MainMenu';
 import HomePage from './pages/home/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import Footer from './components/footer/Footer';
+import AccessDeniedPage from './pages/auth/Accessdeniedpage';
 import { AuthProvider } from './store/auth/AuthContext';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           {/* Sin layout — pantalla completa */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/acceso-denegado" element={<AccessDeniedPage />} />
 
           {/* Con layout — header + mainmenu + footer */}
           <Route path="/*" element={
