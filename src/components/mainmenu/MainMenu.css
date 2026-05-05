@@ -142,9 +142,9 @@
   transition: background 0.15s ease;
 }
  
-.submenu a:hover {
+/* .submenu a:hover {
   background: #f3ebff;
-}
+} */
  
 /* =========================
    TABLET — 769px a 1024px

@@ -81,7 +81,7 @@ const MainMenu = () => {
              <ul className="submenu">
               <li><a href="/../../Paginas/Informes/GeneracionSIN.aspx">Precios</a></li>
               <li><a href="/../../Paginas/Informes/AGPE.aspx">Contratos</a></li>
-              <li><a href="/../../Paginas/Informes/CapacidadEfectiva.aspx">Cargo por Confibialidad</a></li>
+              <li><a href="/../../Paginas/Informes/CapacidadEfectiva.aspx">Cargo por Confiabilidad</a></li>
               <li><a href="/../../Paginas/Informes/DisponibilidadReal.aspx">Montos Liquidados</a></li>
               <li><a href="/../../Paginas/Historicos/Historicos.aspx">Ir a históricos</a></li>
             </ul>

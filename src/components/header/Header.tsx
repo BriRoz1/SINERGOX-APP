@@ -79,7 +79,7 @@ const Header = () => {
               </a>
             </div>
             <div className="portal-name">
-              <a href="/../../Paginas/Home.aspx">
+              <a href="/">
                 <img src={sinergoxlogo} alt="Sinergox" title="Sinergox" />
               </a>
             </div>

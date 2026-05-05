@@ -248,7 +248,7 @@ const HomePage = () => {
 
           {novedadesOpen && (
             <div className="home-novedades__panel">
-              <h3 className="home-novedades__titulo">Novedades</h3>
+              <h2 className="home-novedades__titulo">Novedades</h2>
               <div className="home-novedades__lista">
                 {NOVEDADES.map(n => (
                   <div key={n.id} className="novedad-item">

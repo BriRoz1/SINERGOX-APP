@@ -44,7 +44,7 @@ const Footer = () => {
             </p>
             <div className="footer-bottom__terminos">
               <a
-                href="/../../Documentos/Terminos_Condiciones/Terminos_Legales_Uso_Sinergox.pdf"
+                href="https://sinergox.xm.com.co/Documentos/Terminos_Condiciones/Terminos_Legales_Uso_Sinergox.pdf"
                 target="_blank"
                 rel="noreferrer"
               >
