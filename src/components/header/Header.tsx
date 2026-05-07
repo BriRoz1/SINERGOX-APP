@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import logoColorXm from '../../assets/logo-color-xm.svg';
 import sinergoxlogo from '../../assets/sinergox-logo.svg';
 import arrowDownOrange from '../../assets/arrow-down-orange.svg';
@@ -14,7 +14,6 @@ const Header = () => {
   const [isNarrow, setIsNarrow] = useState<boolean>(window.innerWidth <= 1024);
   const herramientasRef = useRef<HTMLLIElement>(null);
 
-  // El botón del header redirige a la página de login
   const handleLogin = () => navigate('/login');
 
   const toggleDropdown = (name: string) => {
@@ -54,8 +53,11 @@ const Header = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [openDropdown]);
 
-  // Nombre limpio del usuario
-  const displayName = auth.user?.name ?? 'Mi cuenta';
+  const displayName = auth.user?.name ?? 'My account';
+
+  // Clase activa para NavLink
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `nav-item${isActive ? ' nav-item--active' : ''}`;
 
   const LoginButton = () => (
     <button
@@ -70,7 +72,7 @@ const Header = () => {
     <header className="header">
       <div className="portal-brand">
 
-        {/* FILA 1 (siempre): logos a la izquierda, login a la derecha */}
+        {/* ROW 1: logos + login (mobile/tablet) */}
         <div className="header-row-top">
           <div className="header-logos">
             <div className="main-logo">
@@ -79,33 +81,33 @@ const Header = () => {
               </a>
             </div>
             <div className="portal-name">
-              <a href="/">
+              <NavLink to="/">
                 <img src={sinergoxlogo} alt="Sinergox" title="Sinergox" />
-              </a>
+              </NavLink>
             </div>
           </div>
 
-          {/* Visible solo en móvil/tablet */}
+          {/* Mobile/tablet only */}
           <div className="box-login box-login--inline">
             <LoginButton />
           </div>
         </div>
 
-        {/* FILA 2: nav (en desktop va inline con los logos via CSS) */}
+        {/* ROW 2: nav */}
         <nav className="top-nav_menu">
           <ul className="top-nav_menu_links">
 
-            {/* Herramientas */}
+            {/* Tools dropdown */}
             <li
               ref={herramientasRef}
-              className={`has-submenu${openDropdown === 'herramientas' ? ' dropdown-open' : ''}`}
+              className={`has-submenu${openDropdown === 'tools' ? ' dropdown-open' : ''}`}
             >
               <span
                 className="nav-item"
-                onClick={() => toggleDropdown('herramientas')}
+                onClick={() => toggleDropdown('tools')}
                 role="button"
                 tabIndex={0}
-                onKeyDown={e => e.key === 'Enter' && toggleDropdown('herramientas')}
+                onKeyDown={e => e.key === 'Enter' && toggleDropdown('tools')}
               >
                 Herramientas
                 <img src={arrowDownOrange} alt="" className="top-nav_menu_links_icon" aria-hidden="true" />
@@ -113,15 +115,27 @@ const Header = () => {
 
               <div
                 className="top-nav_menu_subitem"
-                style={openDropdown === 'herramientas' && isNarrow ? { top: dropdownTop } : undefined}
+                style={openDropdown === 'tools' && isNarrow ? { top: dropdownTop } : undefined}
               >
-                  <div className="top-nav_menu_subitem_main top-nav_menu_subitem_main--left">
+                <div className="top-nav_menu_subitem_main top-nav_menu_subitem_main--left">
                   <span>Referencias</span>
                   <ul>
-                  <li><a href="/../../Paginas/Reportes/busmeta.aspx">Diccionario de términos</a></li>
-                  <li><a href="/../../Paginas/Reportes/busmeta.aspx">Inventario metricas</a></li>
-                  <li><a href="/../../Paginas/Reportes/busmeta.aspx">Cruce Métricas Tema</a></li>
-                  <li><a href="/Paginas/PreguntasFrecuentes.aspx">Preguntas frecuentes</a></li>
+                    <li>
+                      <NavLink to="/dictionary" className={navLinkClass} onClick={() => setOpenDropdown(null)}>
+                        Diccionario de términos
+                      </NavLink>
+                    </li>
+                    <li>
+                      <a href="/../../Histricos/InventarioMetricas.xlsx">Inventario métricas</a>
+                    </li>
+                    <li>
+                      <a href="/../../Histricos/Cruces_Metricas_Tema.xlsx">Cruce Métricas Tema</a>
+                    </li>
+                    <li>
+                      <NavLink to="/faq" className={navLinkClass} onClick={() => setOpenDropdown(null)}>
+                        Preguntas frecuentes
+                      </NavLink>
+                    </li>
                   </ul>
                 </div>
                 <div className="top-nav_menu_subitem_main top-nav_menu_subitem_main--right">
@@ -136,27 +150,47 @@ const Header = () => {
               </div>
             </li>
 
+            {/* API — external link, no NavLink */}
             <li>
-              <a href="https://github.com/EquipoAnaliticaXM/API_XM" target="_blank" rel="noreferrer" className="nav-item">
+              <a
+                href="https://github.com/EquipoAnaliticaXM/API_XM"
+                target="_blank"
+                rel="noreferrer"
+                className="nav-item"
+              >
                 API
               </a>
             </li>
 
-            {/* Visible solo cuando el usuario está autenticado */}
+            {/* Multidimensional Analysis — only when authenticated */}
             {auth.isAuthenticated && (
               <li>
-                <a href="/analisis-multidimensional" className="nav-item nav-item--highlight">
+                <NavLink to="/multidimensional-analysis" className={({ isActive }) =>
+                  `nav-item nav-item--highlight${isActive ? ' nav-item--active' : ''}`
+                }>
                   Análisis Multidimensional
-                </a>
+                </NavLink>
               </li>
             )}
 
-            <li><a href="/../../Paginas/EnlacesInteres.aspx" className="nav-item">Enlaces de interés</a></li>
-            <li><a href="/../../Paginas/Conoce.aspx" className="nav-item">Conoce Sinergox</a></li>
+            {/* Links of Interest */}
+            <li>
+              <NavLink to="/links-of-interest" className={navLinkClass}>
+                Enlaces de interés
+              </NavLink>
+            </li>
+
+            {/* About Sinergox */}
+            <li>
+              <NavLink to="/about-sinergox" className={navLinkClass}>
+                Conoce Sinergox
+              </NavLink>
+            </li>
+
           </ul>
         </nav>
 
-        {/* Visible solo en desktop */}
+        {/* Desktop login */}
         <div className="box-login box-login--desktop">
           <LoginButton />
         </div>

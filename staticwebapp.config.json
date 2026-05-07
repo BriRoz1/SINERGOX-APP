@@ -1,0 +1,18 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "*.css", "*.js", "*.png", "*.jpg", "*.svg", "*.ico"]
+  },
+  "routes": [
+    { "route": "/login",             "rewrite": "/index.html" },
+    { "route": "/access-denied",     "rewrite": "/index.html" },
+    { "route": "/auth/callback",     "rewrite": "/index.html" },
+    { "route": "/links-of-interest", "rewrite": "/index.html" },
+    { "route": "/about-sinergox",    "rewrite": "/index.html" },
+    { "route": "/dictionary",        "rewrite": "/index.html" },
+    { "route": "/faq",               "rewrite": "/index.html" }
+  ],
+  "globalHeaders": {
+    "Cache-Control": "no-cache"
+  }
+}

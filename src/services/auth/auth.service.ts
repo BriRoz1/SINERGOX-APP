@@ -108,10 +108,23 @@ export async function sendTokenToBackend(accessToken: string, idToken?: string):
     }
   );
 
-  // 403 — usuario sin roles asignados, dejar pasar sin permisos
+  // 403 — puede ser dominio no autorizado O usuario sin roles
   if (res.status === 403) {
+    const body = await res.json().catch(() => ({}));
+    const message = (body.message ?? '').toLowerCase();
+
+    // Si el mensaje indica dominio/tenant no autorizado → lanzar error especial
+    if (
+      message.includes('dominio') ||
+      message.includes('tenant') ||
+      message.includes('no autorizado') ||
+      message.includes('unauthorized')
+    ) {
+      throw new Error('ACCESO_DENEGADO');
+    }
+
+    // Si es solo falta de roles → dejar pasar sin permisos
     console.warn('Usuario sin roles asignados — acceso limitado.');
-    // Extraer nombre y email del id_token si está disponible
     let name  = 'Usuario';
     let email = '';
     if (idToken) {

@@ -4,7 +4,6 @@ import * as pbi from 'powerbi-client';
 import { useAuth } from '../../store/auth/AuthContext';
 import './HomePage.css';
 import sinergoxbanner from '../../assets/banner-sinergox.jpg';
-
 // ── Tipos ────────────────────────────────────────────────────
 
 type Novedad = {
@@ -151,55 +150,7 @@ const PowerBIEmbed = () => {
 // ── Componente Principal ─────────────────────────────────────
 
 const HomePage = () => {
-  const { login } = useAuth();
-  const navigate = useNavigate();
-  const [novedadesOpen, setNovedadesOpen]   = useState(true);
-  const [procesandoAuth, setProcesandoAuth] = useState(false);
-
-  // Manejar callback OAuth en el home
-  useEffect(() => {
-    const params        = new URLSearchParams(window.location.search);
-    const code          = params.get('code');
-    const returnedState = params.get('state');
-    const errorParam    = params.get('error');
-
-    if (errorParam) {
-      console.error('Auth error:', errorParam);
-      window.history.replaceState({}, '', '/');
-      return;
-    }
-
-    if (code) {
-      const savedState = sessionStorage.getItem('oauth_state');
-      if (!savedState || savedState !== returnedState) {
-        console.error('State mismatch — posible CSRF');
-        window.history.replaceState({}, '', '/');
-        return;
-      }
-
-      setProcesandoAuth(true);
-      login(code)
-        .then(() => window.history.replaceState({}, '', '/'))
-        .catch((err: Error) => {
-          if (err.message === 'ACCESO_DENEGADO') {
-            navigate('/acceso-denegado', { replace: true });
-          } else {
-            console.error('Login error:', err);
-            window.history.replaceState({}, '', '/');
-          }
-        })
-        .finally(() => setProcesandoAuth(false));
-    }
-  }, []);
-
-  if (procesandoAuth) {
-    return (
-      <div className="home-auth-loading">
-        <div className="home-auth-loading__spinner" />
-        <p>Iniciando sesión con Microsoft…</p>
-      </div>
-    );
-  }
+  const [novedadesOpen, setNovedadesOpen] = useState(true);
 
   return (
     <div className="home-page">
