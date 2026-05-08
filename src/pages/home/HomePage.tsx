@@ -119,7 +119,7 @@ const PowerBIEmbed = () => {
         // El token del backend se renueva recargando la página cuando expire.
 
       } catch (err) {
-        console.error('Error embebiendo Power BI:', err);
+        // console.error('Error embebiendo Power BI:', err);
         setLoading(false);
       }
     };
@@ -182,7 +182,7 @@ const HomePage = () => {
         .then(() => window.history.replaceState({}, '', '/'))
         .catch((err: Error) => {
           if (err.message === 'ACCESO_DENEGADO') {
-            navigate('/acceso-denegado', { replace: true });
+            navigate('/access-denied', { replace: true });
           } else {
             console.error('Login error:', err);
             window.history.replaceState({}, '', '/');

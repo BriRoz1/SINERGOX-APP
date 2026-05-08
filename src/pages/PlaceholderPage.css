@@ -1,0 +1,31 @@
+.placeholder-page {
+  min-height: calc(100vh - 160px);
+  background: #f5f5f5;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.placeholder-page__card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 3rem;
+  max-width: 700px;
+  width: 100%;
+}
+
+.placeholder-page__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #4a0098;
+  margin-bottom: 0.75rem;
+  font-family: Arial, sans-serif;
+}
+
+.placeholder-page__text {
+  font-size: 15px;
+  color: #888;
+  font-family: Arial, sans-serif;
+}

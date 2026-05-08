@@ -1,0 +1,37 @@
+[33m831d1f7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m ajustes
+[33m8932774[m workflow variables github
+[33mc5d6e4f[m Merge branch 'main' of https://github.com/BriRoz1/SINERGOX-APP
+[33me2b7755[m ajustes
+[33mfb57f54[m ajuste variables entorno
+[33m227d676[m Validacion Variables Entorno
+[33md89ba68[m Rename Accessdeniedpage.tsx to AccessDeniedPage.tsx
+[33md6ab353[m Ajuste Workflow
+[33m6bfe07a[m Ajustes
+[33med75daf[m Merge pull request #3 from BriRoz1/feature/sinergox-dev
+[33m6052aa5[m[33m ([m[1;31morigin/feature/sinergox-dev[m[33m, [m[1;32mfeature/sinergox-dev[m[33m)[m Configuracion Variables
+[33m000bb42[m Merge pull request #2 from BriRoz1/feature/sinergox-dev
+[33mec7c165[m TEST
+[33m81aee05[m Merge pull request #1 from BriRoz1/feature/sinergox-dev
+[33mfaa917c[m chore: remove .env from git tracking
+[33ma15e341[m feat: add SPA navigation routes and placeholder pages
+[33m6d072bb[m Rename Accessdeniedpage.css to AccessDeniedPage.css
+[33md19f305[m CAMBIOS
+[33m5883e22[m Fix YAML formatting for Azure Static Web Apps workflow
+[33m9790535[m Update azure-static-web-apps-witty-smoke-0ee84ff0f.yml
+[33mf5cdb9e[m Upgrade Azure Static Web Apps deployment action to v4
+[33m485dea0[m Upgrade Azure deployment action to version 4
+[33ma42dc98[m vacio 1
+[33m50de7f2[m ci: add Azure Static Web Apps workflow file on-behalf-of: @Azure opensource@microsoft.com
+[33mec0a48e[m[33m ([m[1;31morigin/SIRERGOX-DEV[m[33m)[m env
+[33m666d991[m test error
+[33m58e2458[m ENV
+[33m29dcb47[m CAPA VALIDACION CORREO
+[33mc451014[m reporte correccion
+[33m38a33d9[m REPORTE Y LOGIN
+[33m2e57bf9[m ajuste temporal
+[33m15b1526[m env
+[33m8caf303[m login y embeed
+[33m361504c[m Ajuste QA
+[33m6198faf[m Ajuste banner
+[33mad3dc79[m primer push
+[33maaf7a0b[m first commit
