@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import * as pbi from 'powerbi-client';
-import { useAuth } from '../../store/auth/AuthContext';
+// import { useAuth } from '../../store/auth/AuthContext';
 import './HomePage.css';
 import sinergoxbanner from '../../assets/banner-sinergox.jpg';
 // ── Tipos ────────────────────────────────────────────────────

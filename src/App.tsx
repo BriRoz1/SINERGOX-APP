@@ -6,7 +6,7 @@ import { AuthProvider } from './store/auth/AuthContext';
 
 // Páginas sin layout
 import LoginPage from './pages/auth/LoginPage';
-import AccessDeniedPage from './pages/auth/Accessdeniedpage';
+import AccessDeniedPage from './pages/auth/AccessDeniedPage';
 import AuthCallbackPage from './pages/auth/AuthCallbackPage';
 
 // Páginas con layout
