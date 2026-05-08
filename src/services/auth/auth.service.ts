@@ -108,20 +108,11 @@ export async function sendTokenToBackend(accessToken: string, idToken?: string):
     }
   );
 
-  // 403 — usuario sin roles asignados, dejar pasar sin permisos
+  // 403 — lanzar error para validar que el backend está filtrando correctamente
+  // TODO: cuando el backend diferencie entre "sin roles" y "dominio inválido",
+  // restaurar el manejo de permisos vacíos para usuarios sin roles
   if (res.status === 403) {
-    console.warn('Usuario sin roles asignados — acceso limitado.');
-    // Extraer nombre y email del id_token si está disponible
-    let name  = 'Usuario';
-    let email = '';
-    if (idToken) {
-      try {
-        const payload = JSON.parse(atob(idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-        name  = payload.name ?? payload.preferred_username ?? 'Usuario';
-        email = payload.email ?? payload.upn ?? payload.preferred_username ?? '';
-      } catch { /* usar defaults */ }
-    }
-    return { user: { name, email }, permissions: [] };
+    throw new Error('ACCESO_DENEGADO');
   }
 
   if (!res.ok) {
