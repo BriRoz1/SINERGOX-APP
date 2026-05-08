@@ -108,11 +108,27 @@ export async function sendTokenToBackend(accessToken: string, idToken?: string):
     }
   );
 
-  // 403 — lanzar error para validar que el backend está filtrando correctamente
-  // TODO: cuando el backend diferencie entre "sin roles" y "dominio inválido",
-  // restaurar el manejo de permisos vacíos para usuarios sin roles
+  // 403 — usuario sin roles asignados o dominio inválido
   if (res.status === 403) {
-    throw new Error('ACCESO_DENEGADO');
+    let name  = 'Usuario';
+    let email = '';
+    if (idToken) {
+      try {
+        const payload = JSON.parse(atob(idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        name  = payload.name ?? payload.preferred_username ?? 'Usuario';
+        email = payload.email ?? payload.upn ?? payload.preferred_username ?? '';
+      } catch { /* usar defaults */ }
+    }
+
+    // Validar dominio — solo se permite @xm.com.co
+    const domain = email.split('@')[1]?.toLowerCase();
+    if (domain !== 'xm.com.co') {
+      throw new Error('ACCESO_DENEGADO');
+    }
+
+    // Usuario XM sin roles asignados aún — dejar pasar con permisos vacíos
+    console.warn('Usuario sin roles asignados — acceso limitado.');
+    return { user: { name, email }, permissions: [] };
   }
 
   if (!res.ok) {

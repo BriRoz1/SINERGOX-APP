@@ -53,19 +53,51 @@ const Header = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [openDropdown]);
 
-  const displayName = auth.user?.name ?? 'My account';
+  const displayName = auth.user?.name ?? 'Mi cuenta';
+  const userEmail   = auth.user?.email ?? '';
+
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Clase activa para NavLink
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `nav-item${isActive ? ' nav-item--active' : ''}`;
 
   const LoginButton = () => (
-    <button
-      className="login-btn"
-      onClick={() => auth.isAuthenticated ? logout() : handleLogin()}
-    >
-      {auth.isAuthenticated ? `👤 ${displayName}` : 'Inicio de sesión'}
-    </button>
+    <div className="user-menu-wrapper" ref={userMenuRef}>
+      <button
+        className="login-btn"
+        onClick={() => auth.isAuthenticated ? setUserMenuOpen(p => !p) : handleLogin()}
+      >
+        {auth.isAuthenticated ? `👤 ${displayName}` : 'Inicio de sesión'}
+      </button>
+
+      {auth.isAuthenticated && userMenuOpen && (
+        <div className="user-menu-dropdown">
+          <div className="user-menu-dropdown__info">
+            <span className="user-menu-dropdown__name">{displayName}</span>
+            <span className="user-menu-dropdown__email">{userEmail}</span>
+          </div>
+          <div className="user-menu-dropdown__divider" />
+          <button
+            className="user-menu-dropdown__logout"
+            onClick={() => { logout(); setUserMenuOpen(false); }}
+          >
+            🚪 Cerrar sesión
+          </button>
+        </div>
+      )}
+    </div>
   );
 
   return (
