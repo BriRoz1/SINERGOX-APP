@@ -40,7 +40,7 @@ const Footer = () => {
           <div className="footer-bottom__inner">
             <p className="footer-bottom__txt">
               XM S.A. E.S.P. Calle 12 Sur No. 18 -168. Teléfono: 57 (4) 3172244,
-              Fax: 57 (4) 3170989. Medellín Colombia.
+              Fax: 57 (4) 3170989. Medellín, Colombia.
             </p>
             <div className="footer-bottom__terminos">
               <a

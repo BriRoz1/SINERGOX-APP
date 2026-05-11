@@ -56,6 +56,11 @@ const Header = () => {
   const displayName = auth.user?.name ?? 'Mi cuenta';
   const userEmail   = auth.user?.email ?? '';
 
+  const shortName = (() => {
+  const parts = displayName.trim().split(/\s+/);
+  return parts.length >= 2 ? `${parts[0]} ${parts[2]}` : parts[0];
+})();
+
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -79,7 +84,7 @@ const Header = () => {
         className="login-btn"
         onClick={() => auth.isAuthenticated ? setUserMenuOpen(p => !p) : handleLogin()}
       >
-        {auth.isAuthenticated ? `👤 ${displayName}` : 'Inicio de sesión'}
+        {auth.isAuthenticated ? `👤 ${shortName}` : 'Inicio de sesión'}
       </button>
 
       {auth.isAuthenticated && userMenuOpen && (
