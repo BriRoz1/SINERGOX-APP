@@ -5,6 +5,7 @@ import { useAuth } from '../../store/auth/AuthContext';
 import './HomePage.css';
 import sinergoxbanner from '../../assets/banner-sinergox.jpg';
 import HomeCards from '../../components/home-cards/HomeCards';
+
 // ── Tipos ────────────────────────────────────────────────────
 
 type Novedad = {
@@ -26,7 +27,7 @@ const NOVEDADES: Novedad[] = [
   {
     id: '2',
     fecha: '4/4/2025',
-    texto: '​Informamos que desde el 03 de abril se encuentra disponible la versión 0.3.14 de pydataxm, nuestra librería para consumir la API XM y la API SIMEM. En esta versión se tienen funcionalidades optimizadas para el consumo de la API SIMEM y se pueden seguir usando las mismas funcionalidades disponibles anteriormente, con esta implementación es posible consultar diferentes variables en distintas versiones. Ingresa al enlace para conocer mas información.',
+    texto: 'Informamos que desde el 03 de abril se encuentra disponible la versión 0.3.14 de pydataxm, nuestra librería para consumir la API XM y la API SIMEM.',
     link: '#',
   },
 ];
@@ -45,28 +46,27 @@ async function getEmbedConfig(
     }
   );
 
-  if (!res.ok) {
-    throw new Error('No se pudo obtener configuración Power BI');
-  }
-
+  if (!res.ok) throw new Error('No se pudo obtener configuración Power BI');
   return res.json();
 }
 
-// ── Componente Power BI ──────────────────────────────────────
+// ── Componente genérico Power BI ─────────────────────────────
 
-const PowerBIEmbed = () => {
+type PowerBIEmbedProps = {
+  reportName: string;
+  showFilters?: boolean;
+};
+
+const PowerBIEmbed = ({ reportName, showFilters = true }: PowerBIEmbedProps) => {
   const containerRef      = useRef<HTMLDivElement>(null);
   const powerbiServiceRef = useRef<pbi.service.Service | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const REPORT_NAME = 'Buscador Metadata';
 
   useEffect(() => {
     const embedReport = async () => {
       try {
         if (!containerRef.current) return;
 
-        // Inicializar servicio una sola vez
         if (!powerbiServiceRef.current) {
           powerbiServiceRef.current = new pbi.service.Service(
             pbi.factories.hpmFactory,
@@ -77,13 +77,10 @@ const PowerBIEmbed = () => {
 
         const powerbiService = powerbiServiceRef.current;
 
-        // Reset seguro — React StrictMode monta dos veces en desarrollo
-        try {
-          powerbiService.reset(containerRef.current);
-        } catch { /* ignorar error de StrictMode */ }
+        try { powerbiService.reset(containerRef.current); }
+        catch { /* ignorar StrictMode */ }
 
-        // Obtener token, embedUrl y reportId desde el backend
-        const { token, embedUrl, reportId } = await getEmbedConfig(REPORT_NAME);
+        const { token, embedUrl, reportId } = await getEmbedConfig(reportName);
 
         const config: pbi.IEmbedConfiguration = {
           type:        'report',
@@ -91,32 +88,25 @@ const PowerBIEmbed = () => {
           id:          reportId,
           embedUrl:    embedUrl,
           accessToken: token,
-          permissions: pbi.models.Permissions.All,
+          permissions: pbi.models.Permissions.Read,
           viewMode:    pbi.models.ViewMode.View,
           settings: {
             background: pbi.models.BackgroundType.Transparent,
             panes: {
-              filters:        { visible: true },
+              filters:        { visible: showFilters },
               pageNavigation: { visible: true },
             },
-            localeSettings: {
-              language:     'es',
-              formatLocale: 'es-ES',
-            },
+            localeSettings: { language: 'es', formatLocale: 'es-ES' },
           },
         };
 
         const report = powerbiService.embed(containerRef.current, config) as pbi.Report;
 
         report.on('loaded', () => setLoading(false));
-
-        report.on('error', (event) => {
+        report.on('error',  (event) => {
           console.error('Power BI error:', event.detail);
           setLoading(false);
         });
-
-        // Nota: tokenExpired no está soportado en esta versión del SDK.
-        // El token del backend se renueva recargando la página cuando expire.
 
       } catch (err) {
         console.error('Error embebiendo Power BI:', err);
@@ -128,12 +118,11 @@ const PowerBIEmbed = () => {
 
     return () => {
       if (containerRef.current && powerbiServiceRef.current) {
-        try {
-          powerbiServiceRef.current.reset(containerRef.current);
-        } catch { /* ignorar */ }
+        try { powerbiServiceRef.current.reset(containerRef.current); }
+        catch { /* ignorar */ }
       }
     };
-  }, []);
+  }, [reportName]);
 
   return (
     <div className="home-pbi__sdk-container">
@@ -152,11 +141,10 @@ const PowerBIEmbed = () => {
 
 const HomePage = () => {
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
   const [novedadesOpen, setNovedadesOpen]   = useState(true);
   const [procesandoAuth, setProcesandoAuth] = useState(false);
 
-  // Manejar callback OAuth en el home
   useEffect(() => {
     const params        = new URLSearchParams(window.location.search);
     const code          = params.get('code');
@@ -216,20 +204,15 @@ const HomePage = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <img
-                src={sinergoxbanner}
-                alt="Sinergox"
-                className="home-banner__img"
-              />
+              <img src={sinergoxbanner} alt="Sinergox" className="home-banner__img" />
             </a>
           </div>
         </div>
 
-        {/* Power BI + Novedades */}
+        {/* Power BI indicadores + Novedades */}
         <div className="home-content">
-
           <div className="home-pbi">
-            <PowerBIEmbed />
+            <PowerBIEmbed reportName="Buscador Metadata" showFilters={true} />
           </div>
 
           <div className={`home-novedades${novedadesOpen ? '' : ' home-novedades--closed'}`}>
@@ -244,7 +227,7 @@ const HomePage = () => {
 
             {novedadesOpen && (
               <div className="home-novedades__panel">
-                <h2 className="home-novedades__titulo">Novedades</h2>
+                <h3 className="home-novedades__titulo">Novedades</h3>
                 <div className="home-novedades__lista">
                   {NOVEDADES.map(n => (
                     <div key={n.id} className="novedad-item">
@@ -257,11 +240,27 @@ const HomePage = () => {
               </div>
             )}
           </div>
-
         </div>{/* /home-content */}
 
         {/* Cards — Diccionario y Preguntas frecuentes */}
         <HomeCards />
+
+        {/* Título y texto explicativo */}
+        <div className="home-resumen">
+          <h3 className="home-resumen__titulo">
+            Resumen de las principales variables de la Operación y el Mercado
+          </h3>
+          <p className="home-resumen__texto">
+            Encuentre los valores de las principales variables de la Operación del
+            Sistema Interconectado Nacional (SIN) y el Mercado de Energía Mayorista
+            (MEM) y sus variaciones porcentuales entre dos periodos de tiempo.
+          </p>
+        </div>
+
+        {/* Segundo reporte Power BI — Tablero de resumen */}
+        <div className="home-tablero">
+          <PowerBIEmbed reportName="Tablero Indicadores" showFilters={false} />
+        </div>
 
       </div>{/* /home-card */}
     </div>

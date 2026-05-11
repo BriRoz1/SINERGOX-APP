@@ -360,3 +360,30 @@
     min-height: 500px;
   }
 }
+
+
+/* =========================
+   TÍTULO Y TEXTO RESUMEN
+========================= */
+
+.home-resumen {
+  padding: 1.5rem 2rem 0.5rem;
+  text-align: center;
+}
+
+.home-resumen__titulo {
+  font-family: 'Nunito', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #FF5E00;
+  margin-bottom: 0.75rem;
+}
+
+.home-resumen__texto {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+  color: #000;
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
