@@ -50,6 +50,13 @@
   /* Sin flex:1 para que no ocupe toda la pantalla */
 }
 
+
+.home-card,
+.home-pbi {
+  min-height: 0;
+}
+
+
 .home-indicadores-title {
   font-size: 26px;
   font-weight: bold;
@@ -92,12 +99,14 @@
    Power BI + Novedades
 ========================= */
 
+
 .home-content {
   display: flex;
   flex: 1;
   position: relative;
-  min-height: 1000px;
+  min-height: 0;
 }
+
 
 /* =========================
    POWER BI EMBED
@@ -106,7 +115,7 @@
 .home-pbi {
   flex: 1;
   position: relative;
-  min-height: 800px;
+  min-height: 700px;
 }
 
 .home-pbi__loading {
@@ -136,17 +145,20 @@
   opacity: 1;
 }
 
+
 .home-pbi__sdk-container {
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 800px;
+  height: calc(100vh - 340px);
+  min-height: 500px;
+  overflow: hidden;
 }
+
 
 .home-pbi__sdk-frame {
   width: 100%;
   height: 100%;
-  min-height: 800px;
+  min-height: 500px
 }
 
 /* Quitar borde negro que genera el SDK de Power BI */
@@ -155,6 +167,14 @@
 .home-pbi__sdk-frame > div > iframe {
   border: none !important;
   outline: none !important;
+}
+
+
+.home-pbi__sdk-frame iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: none;
 }
 
 

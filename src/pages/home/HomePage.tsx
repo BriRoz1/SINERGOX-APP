@@ -4,7 +4,7 @@ import * as pbi from 'powerbi-client';
 import { useAuth } from '../../store/auth/AuthContext';
 import './HomePage.css';
 import sinergoxbanner from '../../assets/banner-sinergox.jpg';
-
+import HomeCards from '../../components/home-cards/HomeCards';
 // ── Tipos ────────────────────────────────────────────────────
 
 type Novedad = {
@@ -26,7 +26,7 @@ const NOVEDADES: Novedad[] = [
   {
     id: '2',
     fecha: '4/4/2025',
-    texto: 'Informamos que desde el 03 de abril se encuentra disponible la versión 0.3.14 de pydataxm, nuestra librería para consumir la API XM y la API SIMEM.',
+    texto: '​Informamos que desde el 03 de abril se encuentra disponible la versión 0.3.14 de pydataxm, nuestra librería para consumir la API XM y la API SIMEM. En esta versión se tienen funcionalidades optimizadas para el consumo de la API SIMEM y se pueden seguir usando las mismas funcionalidades disponibles anteriormente, con esta implementación es posible consultar diferentes variables en distintas versiones. Ingresa al enlace para conocer mas información.',
     link: '#',
   },
 ];
@@ -182,7 +182,7 @@ const HomePage = () => {
         .then(() => window.history.replaceState({}, '', '/'))
         .catch((err: Error) => {
           if (err.message === 'ACCESO_DENEGADO') {
-            navigate('/acceso-denegado', { replace: true });
+            navigate('/access-denied', { replace: true });
           } else {
             console.error('Login error:', err);
             window.history.replaceState({}, '', '/');
@@ -259,6 +259,9 @@ const HomePage = () => {
           </div>
 
         </div>{/* /home-content */}
+
+        {/* Cards — Diccionario y Preguntas frecuentes */}
+        <HomeCards />
 
       </div>{/* /home-card */}
     </div>

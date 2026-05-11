@@ -108,10 +108,8 @@ export async function sendTokenToBackend(accessToken: string, idToken?: string):
     }
   );
 
-  // 403 — usuario sin roles asignados, dejar pasar sin permisos
+  // 403 — usuario sin roles asignados o dominio inválido
   if (res.status === 403) {
-    console.warn('Usuario sin roles asignados — acceso limitado.');
-    // Extraer nombre y email del id_token si está disponible
     let name  = 'Usuario';
     let email = '';
     if (idToken) {
@@ -121,6 +119,15 @@ export async function sendTokenToBackend(accessToken: string, idToken?: string):
         email = payload.email ?? payload.upn ?? payload.preferred_username ?? '';
       } catch { /* usar defaults */ }
     }
+
+    // Validar dominio — solo se permite @xm.com.co
+    const domain = email.split('@')[1]?.toLowerCase();
+    if (domain !== 'xm.com.co') {
+      throw new Error('ACCESO_DENEGADO');
+    }
+
+    // Usuario XM sin roles asignados aún — dejar pasar con permisos vacíos
+    console.warn('Usuario sin roles asignados — acceso limitado.');
     return { user: { name, email }, permissions: [] };
   }
 

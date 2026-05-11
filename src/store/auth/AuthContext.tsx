@@ -64,24 +64,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const token = await exchangeCodeForToken(code);
 
     // 2. Enviar access_token al backend — obtiene usuario y permisos
+    //    403 = usuario sin roles asignados → pasa con permissions: []
     const { user, permissions } = await sendTokenToBackend(
       token.access_token,
       token.id_token,
     );
 
-    // 3. Validar dominio — solo se permite @xm.com.co
-    const emailDomain = user.email.split('@')[1]?.toLowerCase();
-    if (emailDomain !== 'xm.com.co') {
-      sessionStorage.removeItem('oauth_state');
-      sessionStorage.removeItem('oauth_code_verifier');
-      throw new Error('ACCESO_DENEGADO');
-    }
-
-    // 4. Limpiar sessionStorage del flujo OAuth
+    // 3. Limpiar sessionStorage del flujo OAuth
     sessionStorage.removeItem('oauth_state');
     sessionStorage.removeItem('oauth_code_verifier');
 
-    // 5. Limpiar prefijo XM_E del nombre
+    // 4. Limpiar prefijo XM_E del nombre
     const cleanUser: UserProfile = {
       name:  cleanDisplayName(user.name),
       email: user.email,

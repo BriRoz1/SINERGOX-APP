@@ -1,63 +1,63 @@
 /* =========================
    RESET BÁSICO
 ========================= */
- 
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
- 
+
 a {
   text-decoration: none;
   transition: all 0.2s ease-in-out;
 }
- 
+
 /* =========================
    HEADER
 ========================= */
- 
+
 .header {
   width: 100%;
   background: #ffffff;
   border-bottom: 2px solid #ff7a00;
 }
- 
+
 /* =========================
    PORTAL BRAND
    Desktop: una sola fila — logos | nav | login
    Móvil:   dos filas — [logos + login] / [nav]
 ========================= */
- 
+
 .portal-brand {
   width: 100%;
   padding: 0.75rem 1.25rem;
   display: flex;
   align-items: center;
 }
- 
+
 /* =========================
    FILA TOP — solo activa en móvil
 ========================= */
- 
+
 .header-row-top {
   display: contents;
 }
- 
+
 .header-logos {
   display: flex;
   align-items: center;
 }
- 
+
 /* =========================
    LOGOS
 ========================= */
- 
+
 .main-logo img {
   height: 40px;
   display: block;
 }
- 
+
 .portal-name {
   display: flex;
   align-items: center;
@@ -65,35 +65,35 @@ a {
   margin-left: 0.75rem;
   padding-left: 0.75rem;
 }
- 
+
 .portal-name img {
   height: 52px;
   display: block;
 }
- 
+
 /* =========================
    MENÚ NAV
 ========================= */
- 
+
 .top-nav_menu {
   display: flex;
   align-items: center;
   margin-left: 2rem;
 }
- 
+
 .top-nav_menu_links {
   display: flex;
   list-style: none;
-  gap: 1rem;
+  gap: 1.5rem;
   align-items: center;
 }
- 
+
 .top-nav_menu_links li {
   position: relative;
   display: flex;
   align-items: center;
 }
- 
+
 .top-nav_menu_links a,
 .nav-item {
   color: #4a0098;
@@ -105,23 +105,23 @@ a {
   gap: 0.35rem;
   cursor: pointer;
 }
- 
+
 .top-nav_menu_links a:hover,
 .nav-item:hover {
   color: #ff7a00;
 }
- 
+
 /* =========================
    ÍTEM DESTACADO
    Visible solo para usuarios autenticados
 ========================= */
- 
+
 .nav-item--highlight {
   color: #ff7a00 !important;
   font-weight: 700;
   position: relative;
 }
- 
+
 .nav-item--highlight::after {
   content: '';
   position: absolute;
@@ -132,53 +132,53 @@ a {
   background: #ff7a00;
   border-radius: 2px;
 }
- 
+
 .nav-item--highlight:hover {
   color: #e06500 !important;
 }
- 
+
 /* =========================
    FLECHA E ÍCONOS
 ========================= */
- 
+
 .top-nav_menu_links_icon {
   width: 14px;
   height: auto;
   transition: transform 0.2s ease;
 }
- 
+
 .dropdown-open > .nav-item .top-nav_menu_links_icon {
   transform: rotate(180deg);
 }
- 
+
 /* =========================
    SUBMENÚ
 ========================= */
- 
+
 .top-nav_menu_subitem {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
- 
+
   background: #ffffff;
   border: 1px solid rgba(74, 0, 152, 0.12);
   border-radius: 16px;
   padding: 1.25rem 0;
- 
+
   display: grid;
   grid-template-columns: 200px 260px;
- 
+
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
- 
+
   opacity: 0;
   visibility: hidden;
   transform: translateY(6px);
   transition: opacity 180ms ease, visibility 180ms ease, transform 180ms ease;
- 
+
   z-index: 1000;
   min-width: 460px;
 }
- 
+
 @media (hover: hover) {
   .has-submenu:hover .top-nav_menu_subitem {
     opacity: 1;
@@ -186,30 +186,30 @@ a {
     transform: translateY(0);
   }
 }
- 
+
 .has-submenu.dropdown-open .top-nav_menu_subitem {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
- 
+
 /* Columna izquierda */
 .top-nav_menu_subitem_main--left {
   padding: 0 1.5rem;
   border-right: 1px solid rgba(74, 0, 152, 0.1);
 }
- 
+
 /* Columna derecha */
 .top-nav_menu_subitem_main--right {
   padding: 0 1.5rem;
 }
- 
+
 .top-nav_menu_subitem_main {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
 }
- 
+
 .top-nav_menu_subitem_main span {
   font-weight: 700;
   color: #ff7a00;
@@ -217,41 +217,41 @@ a {
   margin-bottom: 0.25rem;
   white-space: nowrap;
 }
- 
+
 .top-nav_menu_subitem_main > a {
   font-size: 14px;
   font-weight: 500;
   color: #4a0098;
 }
- 
+
 .top-nav_menu_subitem_main > a:hover {
   color: #ff7a00;
 }
- 
+
 .top-nav_menu_subitem_main ul {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
- 
+
 .top-nav_menu_subitem_main ul li a {
   font-size: 14px;
   font-weight: 500;
   color: #4a0098;
 }
- 
+
 .top-nav_menu_subitem_main ul li a:hover {
   color: #ff7a00;
 }
- 
+
 /* =========================
    LOGIN
 ========================= */
- 
+
 .box-login--inline  { display: none; }
 .box-login--desktop { display: block; margin-left: auto; }
- 
+
 .box-login a,
 .login-btn {
   border: 1px solid #FF5E00;
@@ -270,34 +270,34 @@ a {
   cursor: pointer;
   white-space: nowrap;
 }
- 
+
 .box-login a:hover,
 .login-btn:hover {
   background-color: #ff7a00;
   border-color: #ff7a00;
 }
- 
+
 /* =========================
    TABLET — 769px a 1024px
 ========================= */
- 
+
 @media (max-width: 1024px) and (min-width: 769px) {
   .portal-brand {
     padding: 0.875rem 1.5rem;
   }
- 
+
   .main-logo img { height: 44px; }
   .portal-name img { height: 54px; }
- 
+
   .top-nav_menu { margin-left: 1.5rem; }
   .top-nav_menu_links { gap: 1.25rem; }
- 
+
   .top-nav_menu_links a,
   .nav-item { font-size: 13px; }
- 
+
   .box-login a,
   .login-btn { height: 42px; min-width: 145px; width: auto; font-size: 13px; }
- 
+
   .top-nav_menu_subitem {
     position: fixed;
     left: 1rem;
@@ -308,28 +308,28 @@ a {
     border-radius: 12px;
     padding: 1rem 0;
   }
- 
+
   .top-nav_menu_subitem_main--left {
     padding: 0 1.25rem;
     border-right: 1px solid rgba(74, 0, 152, 0.1);
   }
- 
+
   .top-nav_menu_subitem_main--right {
     padding: 0 1.25rem;
   }
 }
- 
+
 /* =========================
    MÓVIL — hasta 768px
 ========================= */
- 
+
 @media (max-width: 768px) {
   .portal-brand {
     flex-direction: column;
     align-items: stretch;
     padding: 0;
   }
- 
+
   .header-row-top {
     display: flex;
     align-items: center;
@@ -337,14 +337,14 @@ a {
     padding: 0.65rem 1rem;
     border-bottom: 1px solid rgba(74, 0, 152, 0.08);
   }
- 
+
   .box-login--inline  { display: block; }
   .box-login--desktop { display: none; }
- 
+
   .main-logo img { height: 30px; }
   .portal-name { margin-left: 0.5rem; padding-left: 0.5rem; }
   .portal-name img { height: 38px; }
- 
+
   .box-login a,
   .login-btn {
     width: auto;
@@ -353,7 +353,7 @@ a {
     font-size: 11px;
     height: 34px;
   }
- 
+
   .top-nav_menu {
     width: 100%;
     margin-left: 0;
@@ -362,22 +362,22 @@ a {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
- 
+
   .top-nav_menu::-webkit-scrollbar { display: none; }
- 
+
   .top-nav_menu_links {
     flex-wrap: nowrap;
     gap: 1.25rem;
   }
- 
+
   .top-nav_menu_links a,
   .nav-item { font-size: 13px; }
- 
+
   /* En móvil el subrayado queda debajo del texto */
   .nav-item--highlight::after {
     bottom: -2px;
   }
- 
+
   .top-nav_menu_subitem {
     position: fixed;
     left: 1rem;
@@ -388,42 +388,42 @@ a {
     border-radius: 12px;
     padding: 1rem 0;
   }
- 
+
   .top-nav_menu_subitem_main--left {
     padding: 0 1rem;
     border-right: 1px solid rgba(74, 0, 152, 0.1);
   }
- 
+
   .top-nav_menu_subitem_main--right {
     padding: 0 1rem;
   }
 }
- 
+
 @media (max-width: 400px) {
   .portal-name { display: none; }
 }
- 
+
 /* =========================
    2K Y SUPERIORES — 1920px+
 ========================= */
- 
+
 @media (min-width: 1920px) {
   .portal-brand {
     padding: 0.875rem 2rem;
   }
- 
+
   .main-logo img { height: 52px; }
   .portal-name img { height: 64px; }
   .portal-name { margin-left: 1rem; padding-left: 1rem; }
- 
+
   .top-nav_menu { margin-left: 2.5rem; }
   .top-nav_menu_links { gap: 2rem; }
- 
+
   .top-nav_menu_links a,
   .nav-item { font-size: 15px; }
- 
+
   .top-nav_menu_links_icon { width: 16px; }
- 
+
   .box-login a,
   .login-btn {
     height: 48px;
@@ -432,4 +432,79 @@ a {
     padding: 6px 28px;
     border-radius: 24px;
   }
+}
+
+/* =========================
+   USER MENU DROPDOWN
+========================= */
+
+.user-menu-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid rgba(74, 0, 152, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  min-width: 240px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: fadeInDown 0.15s ease;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.user-menu-dropdown__info {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.user-menu-dropdown__name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4a0098;
+  font-family: Arial, sans-serif;
+}
+
+.user-menu-dropdown__email {
+  font-size: 12px;
+  color: #888;
+  font-family: Arial, sans-serif;
+}
+
+.user-menu-dropdown__divider {
+  height: 1px;
+  background: rgba(74, 0, 152, 0.1);
+  margin: 0;
+}
+
+.user-menu-dropdown__logout {
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c0392b;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-menu-dropdown__logout:hover {
+  background: #fff5f5;
 }
