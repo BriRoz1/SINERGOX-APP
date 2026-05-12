@@ -176,7 +176,7 @@ const Header = () => {
                   </ul>
                 </div>
                 <div className="top-nav_menu_subitem_main top-nav_menu_subitem_main--right">
-                  <span>Información complementaria</span>
+                  <span>Listados</span>
                   <ul>
                     <li><a href="/../../Histricos/Listado_Agentes.xlsx">Listado Agentes</a></li>
                     <li><a href="/../../Histricos/Listado_Recursos_Generacion.xlsx">Listado Recursos Generación</a></li>

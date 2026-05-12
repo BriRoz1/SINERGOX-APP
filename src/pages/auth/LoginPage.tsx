@@ -74,7 +74,7 @@ const LoginPage = () => {
                 <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
               </svg>
             </span>
-            Ingresar con Directorio Activo XM
+            Ingresar con directorio activo XM
           </button>
 
           {/* Footer del panel */}
