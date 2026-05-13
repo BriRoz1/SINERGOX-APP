@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as pbi from 'powerbi-client';
 import { useAuth } from '../../store/auth/AuthContext';
 import './HomePage.css';
 import sinergoxbanner from '../../assets/banner-sinergox.jpg';
 import HomeCards from '../../components/home-cards/HomeCards';
+import PowerBIEmbed, { type PowerBIEmbedConfig } from '../../components/powerbi/PowerBIEmbed';
 
 // ── Tipos ────────────────────────────────────────────────────
 
@@ -34,9 +34,7 @@ const NOVEDADES: Novedad[] = [
 
 // ── Obtener configuración Power BI desde el backend ──────────
 
-async function getEmbedConfig(
-  reportName: string
-): Promise<{ token: string; reportId: string; embedUrl: string }> {
+async function getEmbedConfig(reportName: string): Promise<PowerBIEmbedConfig> {
   const res = await fetch(
     'https://asp-sinergox-dev-02-crb0e2g7feghcteq.eastus2-01.azurewebsites.net/api/PowerBi/embed-token',
     {
@@ -45,97 +43,23 @@ async function getEmbedConfig(
       body: JSON.stringify({ reportName }),
     }
   );
-
   if (!res.ok) throw new Error('No se pudo obtener configuración Power BI');
   return res.json();
 }
 
-// ── Componente genérico Power BI ─────────────────────────────
+// ── Hook para cargar la config de un reporte ─────────────────
 
-type PowerBIEmbedProps = {
-  reportName: string;
-  showFilters?: boolean;
-};
-
-const PowerBIEmbed = ({ reportName, showFilters = true }: PowerBIEmbedProps) => {
-  const containerRef      = useRef<HTMLDivElement>(null);
-  const powerbiServiceRef = useRef<pbi.service.Service | null>(null);
-  const [loading, setLoading] = useState(true);
+function usePBIConfig(reportName: string) {
+  const [config, setConfig] = useState<PowerBIEmbedConfig | null>(null);
 
   useEffect(() => {
-    const embedReport = async () => {
-      try {
-        if (!containerRef.current) return;
-
-        if (!powerbiServiceRef.current) {
-          powerbiServiceRef.current = new pbi.service.Service(
-            pbi.factories.hpmFactory,
-            pbi.factories.wpmpFactory,
-            pbi.factories.routerFactory,
-          );
-        }
-
-        const powerbiService = powerbiServiceRef.current;
-
-        try { powerbiService.reset(containerRef.current); }
-        catch { /* ignorar StrictMode */ }
-
-        const { token, embedUrl, reportId } = await getEmbedConfig(reportName);
-
-        const config: pbi.IEmbedConfiguration = {
-          type:        'report',
-          tokenType:   pbi.models.TokenType.Embed,
-          id:          reportId,
-          embedUrl:    embedUrl,
-          accessToken: token,
-          permissions: pbi.models.Permissions.Read,
-          viewMode:    pbi.models.ViewMode.View,
-          settings: {
-            background: pbi.models.BackgroundType.Transparent,
-            panes: {
-              filters:        { visible: showFilters },
-              pageNavigation: { visible: true },
-            },
-            localeSettings: { language: 'es', formatLocale: 'es-ES' },
-          },
-        };
-
-        const report = powerbiService.embed(containerRef.current, config) as pbi.Report;
-
-        report.on('loaded', () => setLoading(false));
-        report.on('error',  (event) => {
-          console.error('Power BI error:', event.detail);
-          setLoading(false);
-        });
-
-      } catch (err) {
-        console.error('Error embebiendo Power BI:', err);
-        setLoading(false);
-      }
-    };
-
-    void embedReport();
-
-    return () => {
-      if (containerRef.current && powerbiServiceRef.current) {
-        try { powerbiServiceRef.current.reset(containerRef.current); }
-        catch { /* ignorar */ }
-      }
-    };
+    getEmbedConfig(reportName)
+      .then(setConfig)
+      .catch(err => console.error(`Error cargando config de ${reportName}:`, err));
   }, [reportName]);
 
-  return (
-    <div className="home-pbi__sdk-container">
-      {loading && (
-        <div className="home-pbi__loading">
-          <div className="home-auth-loading__spinner" />
-          <span>Cargando indicadores…</span>
-        </div>
-      )}
-      <div ref={containerRef} className="home-pbi__sdk-frame" />
-    </div>
-  );
-};
+  return config;
+}
 
 // ── Componente Principal ─────────────────────────────────────
 
@@ -144,6 +68,10 @@ const HomePage = () => {
   const navigate  = useNavigate();
   const [novedadesOpen, setNovedadesOpen]   = useState(true);
   const [procesandoAuth, setProcesandoAuth] = useState(false);
+
+  // Configs de los reportes
+  const configIndicadores = usePBIConfig('Buscador Metadata');
+  const configTablero     = usePBIConfig('Tablero Indicadores');
 
   useEffect(() => {
     const params        = new URLSearchParams(window.location.search);
@@ -170,7 +98,9 @@ const HomePage = () => {
         .then(() => window.history.replaceState({}, '', '/'))
         .catch((err: Error) => {
           if (err.message === 'ACCESO_DENEGADO') {
-            navigate('/access-denied', { replace: true });
+            navigate('/access-denied?reason=domain', { replace: true });
+          } else if (err.message === 'SIN_PERMISOS') {
+            navigate('/access-denied?reason=permissions', { replace: true });
           } else {
             console.error('Login error:', err);
             window.history.replaceState({}, '', '/');
@@ -212,7 +142,13 @@ const HomePage = () => {
         {/* Power BI indicadores + Novedades */}
         <div className="home-content">
           <div className="home-pbi">
-            <PowerBIEmbed reportName="Buscador Metadata" showFilters={true} />
+            {configIndicadores && (
+              <PowerBIEmbed
+                config={configIndicadores}
+                showFilters={true}
+                height="800px"
+              />
+            )}
           </div>
 
           <div className={`home-novedades${novedadesOpen ? '' : ' home-novedades--closed'}`}>
@@ -259,7 +195,13 @@ const HomePage = () => {
 
         {/* Segundo reporte Power BI — Tablero de resumen */}
         <div className="home-tablero">
-          <PowerBIEmbed reportName="Tablero Indicadores" showFilters={false} />
+          {configTablero && (
+            <PowerBIEmbed
+              config={configTablero}
+              showFilters={false}
+              height="550px"
+            />
+          )}
         </div>
 
       </div>{/* /home-card */}

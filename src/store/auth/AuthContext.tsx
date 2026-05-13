@@ -74,6 +74,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     sessionStorage.removeItem('oauth_state');
     sessionStorage.removeItem('oauth_code_verifier');
 
+    console.log('Usuario autenticado:', user);
+    console.log('token.scope:', token.scope);
+    console.log('expira en:', new Date(Date.now() + token.expires_in * 1000).toLocaleString());
+    console.log('access_token:', token.access_token);
+
     // 4. Limpiar prefijo XM_E del nombre
     const cleanUser: UserProfile = {
       name:  cleanDisplayName(user.name),

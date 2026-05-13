@@ -112,6 +112,7 @@ export async function sendTokenToBackend(accessToken: string, idToken?: string):
   if (res.status === 403) {
     let name  = 'Usuario';
     let email = '';
+
     if (idToken) {
       try {
         const payload = JSON.parse(atob(idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
@@ -120,15 +121,19 @@ export async function sendTokenToBackend(accessToken: string, idToken?: string):
       } catch { /* usar defaults */ }
     }
 
+    // Log del access token para diagnóstico
+    console.log('🔑 Access Token:', accessToken);
+    name = cleanDisplayName(name);
+
     // Validar dominio — solo se permite @xm.com.co
     const domain = email.split('@')[1]?.toLowerCase();
     if (domain !== 'xm.com.co') {
       throw new Error('ACCESO_DENEGADO');
     }
 
-    // Usuario XM sin roles asignados aún — dejar pasar con permisos vacíos
-    console.warn('Usuario sin roles asignados — acceso limitado.');
-    return { user: { name, email }, permissions: [] };
+    // Usuario XM sin permisos asignados → bloquear acceso
+    console.log('🔑 Access Token (usuario sin permisos):', accessToken);
+    throw new Error('SIN_PERMISOS');
   }
 
   if (!res.ok) {

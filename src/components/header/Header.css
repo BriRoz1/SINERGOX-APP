@@ -137,6 +137,10 @@ a {
   color: #e06500 !important;
 }
 
+.nav-item--active {
+  color: #ff7a00 !important;
+  border-bottom: 2px solid #ff7a00;
+}
 /* =========================
    FLECHA E ÍCONOS
 ========================= */

@@ -92,10 +92,10 @@
 .home-card-item__label {
   color: #3D3D3D;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: bold;
   margin-left: 8px;
   width: calc(100% - 70px);
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Nunito', sans-serif !important;
   transition: all 0.2s 0s ease-in-out;
 }
 

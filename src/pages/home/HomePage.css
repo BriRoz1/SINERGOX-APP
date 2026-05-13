@@ -39,7 +39,7 @@
   padding: 2rem 4rem;
 }
 
-/* Card contenedora — igual al original */
+/* Card contenedora */
 .home-card {
   background: #ffffff;
   border-radius: 6px;
@@ -47,15 +47,12 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* Sin flex:1 para que no ocupe toda la pantalla */
 }
-
 
 .home-card,
 .home-pbi {
   min-height: 0;
 }
-
 
 .home-indicadores-title {
   font-size: 26px;
@@ -77,21 +74,12 @@
   border-radius: 6px;
   overflow: hidden;
   width: 100%;
-  /* aspect-ratio mantiene la proporción sin importar el zoom o tamaño de pantalla */
- 
-;
   min-height: 160px;
-  max-height: auto
-
-  
 }
 
 .home-banner__img {
   width: 100%;
-  height: auto
-
-
-
+  height: auto;
 }
 
 /* =========================
@@ -99,14 +87,12 @@
    Power BI + Novedades
 ========================= */
 
-
 .home-content {
   display: flex;
   flex: 1;
   position: relative;
   min-height: 0;
 }
-
 
 /* =========================
    POWER BI EMBED
@@ -145,7 +131,6 @@
   opacity: 1;
 }
 
-
 .home-pbi__sdk-container {
   position: relative;
   width: 100%;
@@ -154,14 +139,12 @@
   overflow: hidden;
 }
 
-
 .home-pbi__sdk-frame {
   width: 100%;
   height: 100%;
-  min-height: 500px
+  min-height: 500px;
 }
 
-/* Quitar borde negro que genera el SDK de Power BI */
 .home-pbi__sdk-frame iframe,
 .home-pbi__sdk-frame > div,
 .home-pbi__sdk-frame > div > iframe {
@@ -169,14 +152,12 @@
   outline: none !important;
 }
 
-
 .home-pbi__sdk-frame iframe {
   width: 100%;
   height: 100%;
   display: block;
   border: none;
 }
-
 
 /* =========================
    PANEL NOVEDADES
@@ -195,7 +176,6 @@
   width: 32px;
 }
 
-/* Botón toggle vertical */
 .home-novedades__toggle {
   width: 32px;
   flex-shrink: 0;
@@ -232,7 +212,6 @@
   color: #4a0098;
 }
 
-/* Panel contenido */
 .home-novedades__panel {
   flex: 1;
   overflow-y: auto;
@@ -256,7 +235,6 @@
   gap: 1rem;
 }
 
-/* Igual al original: background #ececec, border-radius 10px, padding 10px */
 .novedad-item {
   background: #ececec;
   border-radius: 10px;
@@ -281,7 +259,6 @@
   text-align: left;
 }
 
-/* "Seguir vínculo" — azul, alineado a la derecha, igual al original */
 .novedad-item__link {
   font-size: 13px;
   color: #0078d4;
@@ -296,71 +273,6 @@
   text-decoration: underline;
   color: #005a9e;
 }
-
-/* =========================
-   TABLET
-========================= */
-
-@media (max-width: 1024px) {
-  .home-banner {
-    grid-template-columns: 240px 1fr;
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  .home-banner__image { min-height: 140px; }
-
-  .home-novedades {
-    width: 260px;
-  }
-}
-
-/* =========================
-   MÓVIL
-========================= */
-
-@media (max-width: 768px) {
-  .home-banner {
-    grid-template-columns: 1fr;
-    padding: 1rem;
-  }
-
-  .home-banner__image { min-height: 120px; }
-
-  .home-content {
-    flex-direction: column;
-  }
-
-  .home-novedades {
-    width: 100%;
-    flex-direction: column;
-    border-left: none;
-    border-top: 1px solid #e8e8e8;
-  }
-
-  .home-novedades--closed {
-    width: 100%;
-    height: 32px;
-  }
-
-  .home-novedades__toggle {
-    width: 100%;
-    height: 32px;
-    flex-direction: row;
-    border-right: none;
-    border-bottom: 1px solid #e8e8e8;
-  }
-
-  .home-novedades__toggle-label {
-    writing-mode: horizontal-tb;
-    transform: none;
-  }
-
-  .home-pbi__iframe {
-    min-height: 500px;
-  }
-}
-
 
 /* =========================
    TÍTULO Y TEXTO RESUMEN
@@ -386,4 +298,90 @@
   max-width: 900px;
   margin: 0 auto;
   line-height: 1.6;
+}
+
+/* =========================
+   TABLET  (≤ 1024px)
+========================= */
+
+@media (max-width: 1024px) {
+  .home-page {
+    padding: 1rem 1.5rem;
+  }
+
+  .home-banner {
+    padding: 0 0.75rem 0.75rem;
+  }
+
+  .home-banner__image { min-height: 140px; }
+
+  .home-novedades {
+    width: 260px;
+  }
+}
+
+/* =========================
+   MÓVIL  (≤ 768px)
+========================= */
+
+@media (max-width: 768px) {
+  /* Sin padding lateral — el card ocupa toda la pantalla */
+  .home-page {
+    padding: 0.5rem;
+  }
+
+  .home-banner {
+    padding: 0 0.5rem 0.5rem;
+  }
+
+  .home-banner__image { min-height: 120px; }
+
+  /* Power BI + Novedades apilados verticalmente */
+  .home-content {
+    flex-direction: column;
+  }
+
+  /* El embed ocupa alto de pantalla menos header (~130px) */
+  .home-pbi {
+    min-height: 0;
+  }
+
+  /* Novedades debajo del embed */
+  .home-novedades {
+    width: 100%;
+    flex-direction: column;
+    border-left: none;
+    border-top: 1px solid #e8e8e8;
+  }
+
+  .home-novedades--closed {
+    width: 100%;
+    height: 32px;
+  }
+
+  .home-novedades__toggle {
+    width: 100%;
+    height: 32px;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .home-novedades__toggle-label {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+
+  .home-indicadores-title {
+    font-size: 18px;
+    padding: 0.4rem 0.75rem 0.3rem;
+  }
+
+  .home-resumen {
+    padding: 1rem 1rem 0.5rem;
+  }
+
+  .home-resumen__titulo {
+    font-size: 20px;
+  }
 }
